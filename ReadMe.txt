@@ -3,9 +3,9 @@ Install for development
 1. install SQL SERVER Database 2019 (for development is free) 
 2. install SQL Server Management Studio
 3. Open SQL Server Management Studio and Create Database with name [Tutorials]
-4- In Database folder open open Tutorials.sql file with Sql Management studio and Excute the code to create database objects.
+4- Open Tutorials.sql file with Sql Management studio and Excute the code to create database objects.
 5. Install Visual Studio 2019 or the latest 2022 (Community version free)
-6. Open Visual Studio and Close Repository. in Repository loaction paste this link [https://github.com/hassonook/TutorialsApp.git]
+6. Open Visual Studio and in first window choose Clone Repository. in Repository loaction paste this link [https://github.com/hassonook/TutorialsApp.git]
 7.After clone done project will be created in visual studio you can run it from visual studio 
 
 
