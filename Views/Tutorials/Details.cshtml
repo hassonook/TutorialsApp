@@ -1,0 +1,140 @@
+﻿@model TutorialsApp.Models.Tutorial
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div>
+    <h4>Tutorial Details</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Desc)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Desc)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Category.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TutorialType.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TutorialType.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileSize)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileSize)
+            @Html.DisplayName("Byte")
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ratings)
+        </dt>
+
+        <dd>
+            @{
+                var rate = 0.00;
+                if (Model.Ratings.Count != 0)
+                {
+                    rate = Model.Ratings.Average(x => x.Rate);
+                }
+            }
+            @string.Format("{0:0.#}", rate)
+            <span class="glyphicon glyphicon-star"></span>
+        </dd>
+
+        <dt>
+            @Html.ActionLink("Back to List", "Index")
+        </dt>
+
+        <dd>
+            @Html.ActionLink("Download", "DownloadFile", new { id = Model.Id }, new { @class = "col-md-5 btn btn-success" })
+        </dd>
+
+    </dl>
+    <div class="row">
+        <div class="rate col-md-offset-3">
+            @using (Html.BeginForm("Create", "Ratings", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.Hidden("TutorialId", Model.Id)
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.RadioButton("Rate", 1)
+                            @Html.RadioButton("Rate", 2)
+                            @Html.RadioButton("Rate", 3)
+                            @Html.RadioButton("Rate", 4)
+                            @Html.RadioButton("Rate", 5)
+                            <input type="submit" value="Rate" class="btn-link" />
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+<hr />
+@using (Html.BeginForm("Create", "Commentings", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>New Comment</h4>
+        @Html.Hidden("TutorialId", Model.Id)
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.TextArea("Comment", null, 3, 100, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-4 col-md-10">
+                <input type="submit" value="Send" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+@if (Model.Commentings.Count != 0)
+{
+    <div class="row">
+        @foreach (var item in Model.Commentings.Reverse())
+        {
+            <div style="padding-bottom: 15px;" class="col-md-10 Comment">
+                <p>@item.Comment</p>
+                @item.AspNetUser.FullName
+                @item.CommentOn
+                <hr />
+            </div>
+        }
+    </div>
+}
