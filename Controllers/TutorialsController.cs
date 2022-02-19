@@ -19,7 +19,11 @@ namespace TutorialsApp.Controllers
         // GET: Tutorials
         public ActionResult Index(string cat)
         {
-            var tutorials = db.Tutorials.Include(t => t.Category).Include(t => t.TutorialType).Include(t => t.AspNetUser);
+            var tutorials = db.Tutorials.Include(t => t.Category).Include(t => t.TutorialType).Include(t => t.AspNetUser).Where(x=>x.Active);
+            if (User.IsInRole("Admin"))
+            {
+                tutorials = db.Tutorials.Include(t => t.Category).Include(t => t.TutorialType).Include(t => t.AspNetUser);
+            }
             if (cat != null)
             {
                 tutorials = db.Tutorials.Where(x => x.Category.Name == cat);
@@ -141,32 +145,40 @@ namespace TutorialsApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,PathFile,CategoryId,TutorialTypeId,Desc,Active,CreatedOn,CreatedBy")] Tutorial tutorial, HttpPostedFileBase PathFile)
+        public ActionResult Edit(Tutorial editedTutorial, HttpPostedFileBase pathFile)
         {
+            Tutorial tutorial = db.Tutorials.Find(editedTutorial.Id);
+            ModelState["pathFile"].Errors.Clear();
+            
             if (ModelState.IsValid)
             {
-                if (PathFile != null && PathFile.ContentLength > 0)
+                if (pathFile != null && pathFile.ContentLength > 0)
                 {
                     string category = db.Categories.Find(tutorial.CategoryId).Name;
                     ///upload file///////////////////////////////////////////////
-                    tutorial.FileSize = PathFile.ContentLength;
+                    tutorial.FileSize = pathFile.ContentLength;
                     string dirPath = Server.MapPath("~/Libarary/" + category + "/");
-                    string extension = Path.GetExtension(PathFile.FileName);
+                    string extension = Path.GetExtension(pathFile.FileName);
                     string fileName = tutorial.Name.Replace(" ", "") + extension;
                     if (!Directory.Exists(dirPath))
                         Directory.CreateDirectory(dirPath);
                     string _path = Path.Combine(dirPath, fileName);
-                    PathFile.SaveAs(_path);
+                    pathFile.SaveAs(_path);
                     string filePath = "~/Libarary/" + category + "/" + fileName;
-                    tutorial.PathFile = filePath;
+                    editedTutorial.PathFile = filePath;
                     ///end upload file/////////////////////////////////////////////
                 }
-                db.Entry(tutorial).State = EntityState.Modified;
+                tutorial.Name = editedTutorial.Name;
+                tutorial.CategoryId = editedTutorial.CategoryId;
+                tutorial.TutorialTypeId = editedTutorial.TutorialTypeId;
+                tutorial.Desc = editedTutorial.Desc;
+                tutorial.Active = editedTutorial.Active;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", tutorial.CategoryId);
-            ViewBag.TutorialTypeId = new SelectList(db.TutorialTypes, "Id", "Name", tutorial.TutorialTypeId);
+            ViewBag.CategoryId = new SelectList(db.Categories, "Id", "Name", editedTutorial.CategoryId);
+            ViewBag.TutorialTypeId = new SelectList(db.TutorialTypes, "Id", "Name", editedTutorial.TutorialTypeId);
             return View(tutorial);
         }
 
