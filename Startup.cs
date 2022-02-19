@@ -60,7 +60,7 @@ namespace TutorialsApp
 
             }
         }
-        //Create Categories
+       // Create Categories;
         private static void CreateCategories()
         {
             Entities db = new Entities();

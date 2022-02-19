@@ -22,8 +22,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Tutorials")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Tutorials")</li>
                     </ul>
                     @Html.Partial("_LoginPartial")
                 </div>
@@ -32,7 +32,7 @@
         <div id="sidebar">
             <ul class="nav navbar-nav">
                 <li>@Html.ActionLink("Arts", "Index", "Tutorials", new { cat = "Arts" }, null)</li>
-                <li>@Html.ActionLink("Computer", "Index", "Tutorials", new { cat = "Computer" }, null)</li>
+                <li>@Html.ActionLink("Computer Science", "Index", "Tutorials", new { cat = "Computer Science" }, null)</li>
                 <li>@Html.ActionLink("Engineering", "Index", "Tutorials", new { cat = "Engineering" }, null)</li>
                 <li>@Html.ActionLink("Management", "Index", "Tutorials", new { cat = "Management" }, null)</li>
                 <li>@Html.ActionLink("Economic", "Index", "Tutorials", new { cat = "Economic" }, null)</li>
